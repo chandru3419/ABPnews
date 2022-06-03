@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
@@ -30,26 +31,32 @@ public class Baseclass {
 	public void configBS(){
 		System.out.println("DB connected");
 		
-		ExtentSparkReporter sparkR = new ExtentSparkReporter("./BaseClassExtent.html");
-		sparkR.config().setTheme(Theme.STANDARD);
-		sparkR.config().setDocumentTitle("Base Extent Report");
-		sparkR.config().setReportName("Report from beforeSuite");
-		sparkR.config().setReportName("Murgesh nb");
-		
-		 reports = new ExtentReports();
-		reports.attachReporter(sparkR);
-		reports.setSystemInfo("OS", "windows");
+//		ExtentSparkReporter sparkR = new ExtentSparkReporter("./BaseClassExtent.html");
+//		sparkR.config().setTheme(Theme.STANDARD);
+//		sparkR.config().setDocumentTitle("Base Extent Report");
+//		sparkR.config().setReportName("Report from beforeSuite");
+//		sparkR.config().setReportName("Murgesh nb");
+//		
+//		 reports = new ExtentReports();
+//		reports.attachReporter(sparkR);
+//		reports.setSystemInfo("OS", "windows");
 	}
 	
 	@BeforeClass
 	public void configBC(){
 		ChromeOptions options=new ChromeOptions();
-		options.addArguments("--disable-notifications");
+	
+		options.addArguments("--incognito");
+		DesiredCapabilities dc=new DesiredCapabilities();
+		dc.setCapability(ChromeOptions.CAPABILITY,options);
+		dc.merge(options);
+		
 		WebDriverManager.chromedriver().setup();
 		driver=new ChromeDriver(options);
 		driver.manage().window().maximize();
-		driver.get("https://www.spicejet.com/");
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.get("https://news.abplive.com/");
+		options.addArguments("--disable-notifications");
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		sdriver=driver;
 	}
 	
@@ -65,14 +72,14 @@ public class Baseclass {
 	
 	@AfterClass
 	public void configAC(){
-		driver.quit();
+	//	driver.quit();
 	}
 	
 	
 	@AfterSuite
 	public void configAS(){
 		System.out.println("DB disconnected");
-		reports.flush();
+//		reports.flush();
 	}
 
 }
